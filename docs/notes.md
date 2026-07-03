@@ -48,3 +48,25 @@ $ az deployment group create \
 
 $ echo "Your web app URL: ${siteURL}"
 ```
+
+## Step 7: Subscribe to the topic
+
+```sh
+$ endpoint="${siteURL}/api/updates"
+topicId=$(az eventgrid topic show --resource-group $resourceGroup \
+    --name $topicName --query "id" --output tsv)
+
+$ az eventgrid event-subscription create \
+    --source-resource-id $topicId \
+    --name TopicSubscription \
+    --endpoint $endpoint
+```
+
+## Step 8: Show topic endpoint and key
+
+```sh
+# Topic endpoint
+$ az eventgrid topic show --name $topicName -g $resourceGroup --query "endpoint" --output tsv
+# Key
+$ az eventgrid topic key list --name $topicName -g $resourceGroup --query "key1" --output tsv
+```
